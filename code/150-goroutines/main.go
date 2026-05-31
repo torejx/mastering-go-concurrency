@@ -16,5 +16,5 @@ func main() {
 }
 
 func run() {
-	fmt.Println("Go routine is running!")
+	fmt.Println("\tGo routine is running!")
 }
