@@ -8,23 +8,27 @@ import (
 
 func main() {
 	t0 := time.Now()
+
 	fmt.Println("Start")
 
 	i := 0
 
 	var mutex sync.Mutex
+	var wg sync.WaitGroup
 
 	for j := 0; j < 1000; j++ {
-		go increment(&i, &mutex)
+		wg.Add(1)
+		go increment(&i, &mutex, &wg)
 	}
 
-	time.Sleep(4 * time.Second)
+	wg.Wait()
 
 	fmt.Printf("i = %d\n", i)
-	fmt.Printf("End in %v\n", time.Now().Sub(t0).Seconds())
+	fmt.Printf("End in %v ms\n", time.Now().Sub(t0).Milliseconds())
 }
 
-func increment(i *int, mutex *sync.Mutex) {
+func increment(i *int, mutex *sync.Mutex, wg *sync.WaitGroup) {
+	// defer wg.Done()
 	mutex.Lock()
 	*i = *i + 1
 	mutex.Unlock()
