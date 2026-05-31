@@ -21,13 +21,13 @@ func main() {
 func sayHi(names []string) {
 	for _, name := range names {
 		time.Sleep(200 * time.Millisecond)
-		fmt.Printf("Hi %v!\n", name)
+		fmt.Printf("\tHi %v!\n", name)
 	}
 }
 
 func sayHowAreYou(names []string) {
 	for _, name := range names {
 		time.Sleep(300 * time.Millisecond)
-		fmt.Printf("\tHow are you, %v?\n", name)
+		fmt.Printf("\t\tHow are you, %v?\n", name)
 	}
 }
