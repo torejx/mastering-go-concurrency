@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
@@ -13,5 +14,9 @@ func main() {
 }
 
 func run() {
-	fmt.Println("Go func is running!")
+	fmt.Println("\tGo func start!")
+
+	time.Sleep(1 * time.Second)
+
+	fmt.Println("\tGo func end!")
 }
