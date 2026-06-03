@@ -4,28 +4,30 @@ import (
 	"fmt"
 	"sync"
 	"time"
+
+	"github.com/torejx/mastering-go-concurrency/code/bar"
 )
 
 func main() {
 	t0 := time.Now()
 	fmt.Println("Start")
 
-	i := 0
+	var m sync.Mutex
 
-	var mutex sync.Mutex
+	orders := make(bar.Orders, 0, 1000)
 
 	for j := 0; j < 1000; j++ {
-		go increment(&i, &mutex)
+		go addOrder(bar.NewOrder(j, bar.NewEspresso()), &orders, &m)
 	}
 
-	time.Sleep(4 * time.Second)
+	time.Sleep(2 * time.Second)
 
-	fmt.Printf("i = %d\n", i)
-	fmt.Printf("End in %v\n", time.Now().Sub(t0).Seconds())
+	fmt.Printf("orders size = %d\n", len(orders))
+	fmt.Printf("End in %v\n", time.Since(t0).Seconds())
 }
 
-func increment(i *int, mutex *sync.Mutex) {
-	mutex.Lock()
-	*i = *i + 1
-	mutex.Unlock()
+func addOrder(order bar.Order, list *bar.Orders, m *sync.Mutex) {
+	m.Lock()
+	*list = append(*list, order)
+	m.Unlock()
 }
