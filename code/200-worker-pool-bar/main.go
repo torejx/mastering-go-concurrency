@@ -11,7 +11,7 @@ import (
 
 func main() {
 	t0 := time.Now()
-	fmt.Printf("Start\n")
+	fmt.Println("Start")
 	defer func() {
 		fmt.Printf("End in %v ms\n", time.Now().Sub(t0).Milliseconds())
 	}()
@@ -19,7 +19,7 @@ func main() {
 	in := make(chan bar.Order, 10) // choose a proper buffer size
 	out := make(chan string, 10)
 
-	workers := 3 // number of concurrent executions
+	numberOfCoffeeMachines := 3 // number of concurrent executions
 
 	wg := sync.WaitGroup{}
 
@@ -31,7 +31,7 @@ func main() {
 	}()
 
 	// start workers
-	for i := 0; i < workers; i++ {
+	for i := 0; i < numberOfCoffeeMachines; i++ {
 		wg.Add(1)
 		// worker function
 		go func() {
