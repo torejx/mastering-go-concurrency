@@ -1,0 +1,28 @@
+==================
+WARNING: DATA RACE
+Write at 0x00c0000ba010 by main goroutine:
+  runtime.recvDirect() // copy the data directly from the sender's memory to the receiver's memory
+      /Users/salvatore.caputi/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.26.2.darwin-arm64/src/runtime/chan.go:405 +0x7c
+  main.main()
+      /Users/salvatore.caputi/Projects/mastering-go-concurrency/code/181-channels-bis/main.go:17 +0x1c8
+
+Previous read at 0x00c0000ba010 by goroutine 8:
+  runtime.chansend1()
+      /Users/salvatore.caputi/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.26.2.darwin-arm64/src/runtime/chan.go:162 +0x2c
+  main.double()
+      /Users/salvatore.caputi/Projects/mastering-go-concurrency/code/181-channels-bis/main.go:21 +0x38
+  main.main.gowrap2()
+      /Users/salvatore.caputi/Projects/mastering-go-concurrency/code/181-channels-bis/main.go:13 +0x18
+
+Goroutine 8 (running) created at:
+  main.main()
+      /Users/salvatore.caputi/Projects/mastering-go-concurrency/code/181-channels-bis/main.go:13 +0x14c
+==================
+panic: send on closed channel
+
+goroutine 22 [running]:
+main.double(...)
+        /Users/salvatore.caputi/Projects/mastering-go-concurrency/code/181-channels-bis/main.go:21
+created by main.main in goroutine 1
+        /Users/salvatore.caputi/Projects/mastering-go-concurrency/code/181-channels-bis/main.go:13 +0x150
+exit status 2
