@@ -16,35 +16,49 @@ func main() {
 		fmt.Printf("End in %v ms\n", time.Now().Sub(t0).Milliseconds())
 	}()
 
-	in := make(chan bar.Order, 10) // choose a proper buffer size
-	out := make(chan string, 10)
+	/**
+	Input: lots of orders
+	Output: lots of ☕and some logs of our coffee machines (string)
 
-	numberOfCoffeeMachines := 3 // number of concurrent executions
+	Deliverable: a log file for each machine with start-end timestamp for each order
+
+	Constraints: we have only 3 coffee machines
+
+	*/
+
+	in := make(chan bar.Order, 10) // choose a proper buffer size
+	out := make(chan bar.LogEntry, 10)
+
+	numberOfCoffeeMachines := 3
 
 	wg := sync.WaitGroup{}
+	outWg := sync.WaitGroup{}
 
 	// consume output
+	outWg.Add(1)
 	go func() {
+		defer outWg.Done()
 		for o := range out {
-			fmt.Printf("-- %v --\n", o)
+			fmt.Println(o)
 		}
 	}()
 
-	// start workers
+	// start coffee machines!!!
 	for i := 0; i < numberOfCoffeeMachines; i++ {
 		wg.Add(1)
 		// worker function
-		go func() {
+		go func(machineID int) {
 			defer wg.Done()
-			for v := range in {
-				out <- fmt.Sprintf("Machine #%d: %v", i, v.Coffee.Brew(v.ID))
+			machine := bar.NewMachine(machineID)
+
+			for order := range in {
+				out <- machine.Brew(order)
 			}
-		}()
+		}(i)
 	}
 
 	// feed the input
-	for i := 0; i < 999; i++ { // what happens if I increase the limit?
-		rand.Seed(time.Now().UnixNano())
+	for i := 0; i < 150; i++ { // what happens if I increase the limit?
 		k := rand.Intn(2)
 		if k == 0 {
 			in <- bar.NewOrder(i, bar.NewEspresso())
@@ -53,7 +67,7 @@ func main() {
 		}
 	}
 
-	// clone the input channel
+	// close the input channel
 	close(in)
 
 	// wait for workers
@@ -61,4 +75,7 @@ func main() {
 
 	// close output
 	close(out)
+
+	// wait for output worker
+	outWg.Wait()
 }

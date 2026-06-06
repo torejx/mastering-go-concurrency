@@ -1,13 +1,12 @@
 package bar
 
 import (
-	"fmt"
 	"time"
 )
 
 type Coffee interface {
-	Brew(orderID int) string
 	Name() string
+	BrewTime() time.Duration
 }
 
 type Espresso struct{}
@@ -18,9 +17,8 @@ func NewEspresso() Espresso {
 
 func (e Espresso) Name() string { return "Espresso" }
 
-func (e Espresso) Brew(orderID int) string {
-	time.Sleep(200 * time.Millisecond)
-	return fmt.Sprintf("Order #%d ready - %s ☕", orderID, e.Name())
+func (e Espresso) BrewTime() time.Duration {
+	return 200 * time.Millisecond
 }
 
 type Cappuccino struct{}
@@ -31,7 +29,6 @@ func NewCappuccino() Cappuccino {
 
 func (c Cappuccino) Name() string { return "Cappuccino" }
 
-func (c Cappuccino) Brew(orderID int) string {
-	time.Sleep(300 * time.Millisecond)
-	return fmt.Sprintf("Order #%d ready - %s ☕", orderID, c.Name())
+func (c Cappuccino) BrewTime() time.Duration {
+	return 300 * time.Millisecond
 }

@@ -1,1 +1,0 @@
-# From Race Conditions to Worker Pools: Mastering Go Concurrency
