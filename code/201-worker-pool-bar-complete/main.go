@@ -16,16 +16,6 @@ func main() {
 		fmt.Printf("End in %v ms\n", time.Now().Sub(t0).Milliseconds())
 	}()
 
-	/**
-	Input: lots of orders
-	Output: lots of ☕and some logs of our coffee machines (string)
-
-	Deliverable: a log file for each machine with start-end timestamp for each order
-
-	Constraints: we have only 3 coffee machines
-
-	*/
-
 	in := make(chan bar.Order, 10) // choose a proper buffer size
 	out := make(chan bar.LogEntry, 10)
 
